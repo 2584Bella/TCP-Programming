@@ -68,10 +68,12 @@ def main():
     print("服务器启动，等待客户端连接...")
 
     while True:
+        #接收客户端连接（获取套接字和地址元组（Ip地址，端口号）
         client_socket, addr = server_socket.accept()#连接套接字
         print(f"新连接来自: {addr}")
         # 为每个客户端创建线程处理（多线程）
         client_thread = threading.Thread(target=handle_client, args=(client_socket, addr))#指定线程要执行的函数和传递给handle_client函数的参数
+        #启动线程
         client_thread.start()
 
 
