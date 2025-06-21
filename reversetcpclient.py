@@ -19,12 +19,13 @@ DATA_FORMAT = '>H I'  # Type(2B) + Length(4B)数据长度
 
 
 def main():
-    parser = argparse.ArgumentParser(description='TCP Reverse Client')
+    #创建命令行解析器
+    parser = argparse.ArgumentParser(description='TCP Reverse Client')#添加描述
     parser.add_argument('--server_ip', required=True, help='Server IP address')
     parser.add_argument('--server_port', type=int, required=True, help='Server port')
-    parser.add_argument('--lmin', type=int, required=True, help='Minimum block length')
-    parser.add_argument('--lmax', type=int, required=True, help='Maximum block length')
-    parser.add_argument('--input_file', default='test.txt', help='输入文件路径（ASCII格式）')
+    parser.add_argument('--lmin', type=int, required=True, help='Minimum block length')#最小块长
+    parser.add_argument('--lmax', type=int, required=True, help='Maximum block length')#最大块长
+    parser.add_argument('--input_file', default='test.txt', help='输入文件路径（ASCII格式）')#文件名为可选输入
     args = parser.parse_args()
 
     # 客户端Socket初始化
@@ -49,11 +50,11 @@ def main():
         raise Exception("文件包含非ASCII字符，请检查")
 
     # 分块逻辑
-    blocks = []
-    total_length = len(data)
-    current_pos = 0
+    blocks = []#存取分块
+    total_length = len(data)#数据总长度
+    current_pos = 0#当前分块位置
     while current_pos < total_length:
-        remaining = total_length - current_pos
+        remaining = total_length - current_pos#剩余数据长度
         if remaining <= args.lmax:  # 剩余数据作为最后一块
             block_len = remaining
         else:
@@ -61,7 +62,7 @@ def main():
             block_len = random.randint(args.lmin, args.lmax)
         #切片操作获取块
         blocks.append(data[current_pos:current_pos + block_len])
-        current_pos += block_len
+        current_pos += block_len#更新分块位置
     N = len(blocks)  # 总块数
 
     # 发送Initialization报文
@@ -125,7 +126,7 @@ def main():
         filename, ext = os.path.splitext(args.input_file)  # 分离文件名和扩展名
         output_file = f"reversed_{filename}{ext}"  # 拼接新文件名
         with open(output_file, 'wb') as f:
-            f.write(reversed_data)
+            f.write(reversed_data)#写入数据
     except Exception as e:
         raise Exception(f"写入文件失败: {str(e)}")
 
